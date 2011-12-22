@@ -88,6 +88,7 @@ private:
     QPoint lastPos;
     QColor qtGreen;
     QColor qtPurple;
+    QColor qtBlack;
 };
 //! [3]
 

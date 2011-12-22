@@ -388,7 +388,9 @@ void QtLogo::buildGeometry(int divisions, qreal scale)
 
     RectTorus body(geom, 0.20, 0.30, 0.1, divisions);
 
-    parts << stem.parts << cross.parts << body.parts;
+    RectPrism my_test(geom, 0.18*scale, 0.18*scale, 0.18*scale);
+
+    parts << stem.parts << cross.parts << body.parts << my_test.parts;
 
     geom->finalize();
 }

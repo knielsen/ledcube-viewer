@@ -45,6 +45,7 @@
 
 #include "glwidget.h"
 #include "qtlogo.h"
+#include "ledcube.h"
 
 #ifndef GL_MULTISAMPLE
 #define GL_MULTISAMPLE  0x809D
@@ -61,6 +62,7 @@ GLWidget::GLWidget(QWidget *parent)
 
     qtGreen = QColor::fromCmykF(0.40, 0.0, 1.0, 0.0);
     qtPurple = QColor::fromCmykF(0.39, 0.39, 0.0, 0.0);
+    qtBlack = QColor(0, 0, 0);
 }
 //! [0]
 
@@ -128,10 +130,12 @@ void GLWidget::setZRotation(int angle)
 //! [6]
 void GLWidget::initializeGL()
 {
-    qglClearColor(qtPurple.dark());
+    qglClearColor(qtBlack);
 
     logo = new QtLogo(this, 64);
     logo->setColor(qtGreen.dark());
+
+    build_geometry();
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
@@ -153,7 +157,8 @@ void GLWidget::paintGL()
     glRotatef(xRot / 16.0, 1.0, 0.0, 0.0);
     glRotatef(yRot / 16.0, 0.0, 1.0, 0.0);
     glRotatef(zRot / 16.0, 0.0, 0.0, 1.0);
-    logo->draw();
+//    logo->draw();
+    draw_ledcube();
 }
 //! [7]
 

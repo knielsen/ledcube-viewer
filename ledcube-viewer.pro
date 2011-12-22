@@ -7,5 +7,6 @@ HEADERS       = glwidget.h \
 SOURCES       = glwidget.cpp \
                 main.cpp \
                 window.cpp \
-                qtlogo.cpp
+                qtlogo.cpp \
+                ledcube.cpp
 QT           += opengl
