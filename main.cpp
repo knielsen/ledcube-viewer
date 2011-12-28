@@ -42,6 +42,7 @@
 #include <QDesktopWidget>
 
 #include "window.h"
+#include "io.h"
 
 int main(int argc, char *argv[])
 {
@@ -55,5 +56,8 @@ int main(int argc, char *argv[])
         window.show();
     else
         window.showMaximized();
+
+    start_io_threads();
+
     return app.exec();
 }

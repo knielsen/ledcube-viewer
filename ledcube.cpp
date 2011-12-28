@@ -7,6 +7,9 @@
 #include <QObject>
 #include <QColor>
 
+#include "io.h"
+
+
 static QVector<QVector3D> vertices;
 static QVector<QVector3D> normals;
 static QVector<GLushort> faces;
@@ -90,7 +93,7 @@ build_geometry()
   {
     for (int j= 0; j < 3; j++)
     {
-      colourVec[i][j] *= ((15-i)*(15-i))/225.0;
+      colourVec[i][j] *= (i+2)*(i+2)/(17.0*17.0);
     }
   }
 }
@@ -104,13 +107,21 @@ draw_ledcube()
   glEnableClientState(GL_VERTEX_ARRAY);
   glEnableClientState(GL_NORMAL_ARRAY);
 
+  const uint8_t *frame= get_current_frame();
+
   const GLushort *indices = faces.constData();
-  for (int i= 0; i < 5*5*5; i++)
-  {
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE,
-                 colourVec[i % 16]);
-    glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_SHORT, indices + 12*i);
-  }
+  int i= 0;
+  for (int z= 0; z < 5; ++z)
+    for (int y= 0; y < 5; ++y)
+      for (int x= 0; x < 5; ++x)
+      {
+        uint8_t col= frame[z * (11*11) + y * 11 + x];
+        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, colourVec[col]);
+        glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_SHORT, indices + 12*i);
+        ++i;
+      }
+
+  release_frame();
 
   glDisableClientState(GL_VERTEX_ARRAY);
   glDisableClientState(GL_NORMAL_ARRAY);

@@ -45,17 +45,21 @@
 
 #include "glwidget.h"
 #include "ledcube.h"
+#include "io.h"
 
 #ifndef GL_MULTISAMPLE
 #define GL_MULTISAMPLE  0x809D
 #endif
 
 GLWidget::GLWidget(QWidget *parent)
-    : QGLWidget(QGLFormat(QGL::SampleBuffers), parent)
+    : QGLWidget(QGLFormat(QGL::SampleBuffers), parent), frame_counter(0)
 {
     xRot = 0;
     yRot = 0;
     zRot = 0;
+    frame_timer.setSingleShot(false);
+    connect(&frame_timer, SIGNAL(timeout()), this, SLOT(new_frame()));
+    frame_timer.start((1000 + FRAMERATE/2) / FRAMERATE);
 }
 
 GLWidget::~GLWidget()
@@ -110,6 +114,12 @@ void GLWidget::setZRotation(int angle)
     }
 }
 
+void GLWidget::new_frame()
+{
+    ++frame_counter;
+    updateGL();
+}
+
 void GLWidget::initializeGL()
 {
     qglClearColor(QColor(0, 0, 0));
@@ -131,9 +141,15 @@ void GLWidget::paintGL()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
     glTranslatef(0.0, 0.0, -10.0);
-    glRotatef(xRot / 16.0, 1.0, 0.0, 0.0);
-    glRotatef(yRot / 16.0, 0.0, 1.0, 0.0);
-    glRotatef(zRot / 16.0, 0.0, 0.0, 1.0);
+    int x = xRot + 80*sin(frame_counter / 20.0);
+    qNormalizeAngle(x);
+    int y = yRot + 65*cos(frame_counter / 35.0);
+    qNormalizeAngle(y);
+    int z = zRot + 40*sin(frame_counter / 55.0);
+    qNormalizeAngle(z);
+    glRotatef(x / 16.0, 1.0, 0.0, 0.0);
+    glRotatef(y / 16.0, 0.0, 1.0, 0.0);
+    glRotatef(z / 16.0, 0.0, 0.0, 1.0);
     draw_ledcube();
 }
 

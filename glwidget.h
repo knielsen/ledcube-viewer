@@ -41,7 +41,10 @@
 #ifndef GLWIDGET_H
 #define GLWIDGET_H
 
+#include <stdint.h>
+
 #include <QGLWidget>
+#include <QTimer>
 
 class GLWidget : public QGLWidget
 {
@@ -58,6 +61,9 @@ public slots:
     void setXRotation(int angle);
     void setYRotation(int angle);
     void setZRotation(int angle);
+
+private slots:
+    void new_frame();
 
 signals:
     void xRotationChanged(int angle);
@@ -76,6 +82,8 @@ private:
     int yRot;
     int zRot;
     QPoint lastPos;
+    QTimer frame_timer;
+    uint64_t frame_counter;
 };
 
 #endif
