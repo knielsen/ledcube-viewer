@@ -1,6 +1,7 @@
 #include <string.h>
 #include <errno.h>
 #include <sys/time.h>
+#include <sys/types.h>
 #include <unistd.h>
 #include <stdint.h>
 #include <pthread.h>
@@ -95,19 +96,29 @@ io_thread_handler(void *app_data __attribute__((unused)))
 
   for (;;)
   {
-    int sofar= 0;
-    int remain= sizeof(buf);
-    while (sofar < remain)
+    unsigned sofar= 0;
+    while (sofar < sizeof(buf))
     {
-      ssize_t res= read(0, &(buf[sofar]), remain);
+      ssize_t res= read(0, &(buf[sofar]), sizeof(buf) - sofar);
       if (res < 0 && errno != EINTR)
       {
         fprintf(stderr, "Error: read() returns res=%d: %d: %s\n",
                 (int)res, errno, strerror(errno));
         exit(1);
       }
+      if (res == 0)
+      {
+        /*
+          End-of file.
+          Try to seek to the start (works if normal file).
+          If it doesn't work (eg. pipe from generator program), stop.
+        */
+        off_t ret= lseek(0, 0, SEEK_SET);
+        if (ret == (off_t)-1)
+          exit(0);
+        sofar= 0;
+      }
       sofar+= res;
-      remain-= res;
     }
     /* ToDo: implement re-sync ability. */
     if (buf[0] != 0)
