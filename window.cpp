@@ -69,7 +69,7 @@ Window::Window()
     setLayout(mainLayout);
 
     xSlider->setValue(15 * 16);
-    ySlider->setValue(345 * 16);
+    ySlider->setValue(79 * 16);
     zSlider->setValue(0 * 16);
     setWindowTitle(tr("Ledcube viewer"));
 }

@@ -115,7 +115,7 @@ draw_ledcube()
     for (int y= 0; y < 5; ++y)
       for (int x= 0; x < 5; ++x)
       {
-        uint8_t col= frame[z * (11*11) + y * 11 + x];
+        uint8_t col= frame[y * (11*11) + z * 11 + x];
         glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, colourVec[col]);
         glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_SHORT, indices + 12*i);
         ++i;
