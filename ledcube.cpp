@@ -33,6 +33,8 @@ static float colourVec[16][4] = {
   { 1.0, 1.0, 0.55, 1.0 }
 };
 
+static float col_green[4];
+static float col_red[4] = { 0.55, 0.025, 0.025};
 
 static void
 add_face(QVector3D a, QVector3D b, QVector3D c)
@@ -89,6 +91,25 @@ build_geometry()
     }
   }
 
+  QVector3D t1(-2.7*D, -2.4*D, -2.7*D);
+  QVector3D t2(-2.7*D, -2.4*D, 2.7*D);
+  QVector3D t3(2.7*D, -2.4*D, -2.7*D);
+  QVector3D t4(2.7*D, -2.4*D, 2.7*D);
+  QVector3D b1(-2.7*D, -3.3*D, -2.7*D);
+  QVector3D b2(-2.7*D, -3.3*D, 2.7*D);
+  QVector3D b3(2.7*D, -3.3*D, -2.7*D);
+  QVector3D b4(2.7*D, -3.3*D, 2.7*D);
+  add_face(t1,t2,t3);
+  add_face(t3,t2,t4);
+  add_face(t2,t1,b1);
+  add_face(b2,t2,b1);
+  add_face(t1,b3,b1);
+  add_face(t1,t3,b3);
+  add_face(t3,t4,b4);
+  add_face(t3,b4,b3);
+  add_face(t4,t2,b2);
+  add_face(b2,b4,t4);
+
   for (int i= 0; i < 16; i++)
   {
     for (int j= 0; j < 3; j++)
@@ -96,6 +117,11 @@ build_geometry()
       colourVec[i][j] *= (i+2)*(i+2)/(17.0*17.0);
     }
   }
+  QColor tmp_green= QColor::fromCmykF(0.40, 0.0, 1.0, 0.0);
+  col_green[0]= tmp_green.redF();
+  col_green[1]= tmp_green.greenF();
+  col_green[2]= tmp_green.blueF();
+  col_green[3]= tmp_green.alphaF();
 }
 
 void
@@ -122,6 +148,9 @@ draw_ledcube()
       }
 
   release_frame();
+
+  glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, col_red);
+  glDrawElements(GL_TRIANGLES, 30, GL_UNSIGNED_SHORT, indices + 12*i);
 
   glDisableClientState(GL_VERTEX_ARRAY);
   glDisableClientState(GL_NORMAL_ARRAY);
