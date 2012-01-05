@@ -122,7 +122,7 @@ void GLWidget::new_frame()
 
 void GLWidget::initializeGL()
 {
-    qglClearColor(QColor(0, 0, 0));
+    qglClearColor(QColor(0, 0, 45));
 
     build_geometry();
 
