@@ -160,10 +160,14 @@ void GLWidget::resizeGL(int width, int height)
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
+#if USE_ORTOGRAPHIC
 #ifdef QT_OPENGL_ES_1
     glOrthof(-0.5, +0.5, -0.5, +0.5, 4.0, 15.0);
 #else
     glOrtho(-0.5, +0.5, -0.5, +0.5, 4.0, 15.0);
+#endif
+#else
+    glFrustum (-0.4, 0.4, -0.4, 0.4, 6.2, 14.0);
 #endif
     glMatrixMode(GL_MODELVIEW);
 }
