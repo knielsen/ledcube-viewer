@@ -35,6 +35,7 @@ static float colourVec[16][4] = {
 
 static float col_green[4];
 static float col_red[4] = { 0.55, 0.025, 0.025};
+static float col_silver[4] = { 0.9, 0.9, 0.9};
 
 static void
 add_face(QVector3D a, QVector3D b, QVector3D c)
@@ -49,6 +50,13 @@ add_face(QVector3D a, QVector3D b, QVector3D c)
   faces.append(vertices.count());
   vertices.append(c);
   normals.append(normal);
+}
+
+static void
+add_point(QVector3D p)
+{
+  faces.append(vertices.count());
+  vertices.append(p);
 }
 
 void
@@ -112,6 +120,38 @@ build_geometry()
   add_face(b1,b3,b2);
   add_face(b3,b4,b2);
 
+  /* Lines. */
+  for (int i= 0; i < 5; i++)
+    for (int j= 0; j < 5; j++)
+    {
+      QVector3D tr1(D*(j-2), -3.5*D, D*(i-2));
+      QVector3D tr2(D*(j-2),  2*D, D*(i-2));
+      QVector3D p1(0,0,0);
+      p1 += tr1;
+      add_point(p1);
+      QVector3D p2(0,0,0);
+      p2 += tr2;
+      add_point(p2);
+
+      QVector3D tr3(D*(j-2), D*(i-2), -2*D);
+      QVector3D tr4(D*(j-2), D*(i-2),  2*D);
+      QVector3D p3(0,0,0);
+      p3 += tr3;
+      add_point(p3);
+      QVector3D p4(0,0,0);
+      p4 += tr4;
+      add_point(p4);
+
+      QVector3D tr5(-2*D, D*(j-2), D*(i-2));
+      QVector3D tr6( 2*D, D*(j-2), D*(i-2));
+      QVector3D p5(0,0,0);
+      p5 += tr5;
+      add_point(p5);
+      QVector3D p6(0,0,0);
+      p6 += tr6;
+      add_point(p6);
+    }
+
   for (int i= 0; i < 16; i++)
   {
     for (int j= 0; j < 3; j++)
@@ -153,6 +193,9 @@ draw_ledcube()
 
   glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, col_red);
   glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, indices + 12*i);
+
+  glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, col_silver);
+  glDrawElements(GL_LINES, 150, GL_UNSIGNED_SHORT, indices + 12*i + 36);
 
   glDisableClientState(GL_VERTEX_ARRAY);
   glDisableClientState(GL_NORMAL_ARRAY);
