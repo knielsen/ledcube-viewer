@@ -109,6 +109,8 @@ build_geometry()
   add_face(t3,b4,b3);
   add_face(t4,t2,b2);
   add_face(b2,b4,t4);
+  add_face(b1,b3,b2);
+  add_face(b3,b4,b2);
 
   for (int i= 0; i < 16; i++)
   {
@@ -150,7 +152,7 @@ draw_ledcube()
   release_frame();
 
   glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, col_red);
-  glDrawElements(GL_TRIANGLES, 30, GL_UNSIGNED_SHORT, indices + 12*i);
+  glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, indices + 12*i);
 
   glDisableClientState(GL_VERTEX_ARRAY);
   glDisableClientState(GL_NORMAL_ARRAY);
