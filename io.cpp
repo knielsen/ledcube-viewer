@@ -218,11 +218,7 @@ framerate_thread_handler(void *app_data __attribute__((unused)))
 
     uint64_t usec_passed;
     usec_passed= (uint64_t)1000000 * (time_now.tv_sec - time_start.tv_sec);
-    if (time_now.tv_usec > time_start.tv_usec)
-      usec_passed+= time_now.tv_usec - time_start.tv_usec;
-    else
-      usec_passed= usec_passed - (uint64_t)1000000 +
-        (time_start.tv_usec - time_now.tv_usec);
+    usec_passed= (usec_passed + time_now.tv_usec) -time_start.tv_usec;
     uint64_t usec_target= frame * ((uint64_t)1000000 / FRAMERATE);
     if (usec_passed < usec_target)
     {
