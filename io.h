@@ -1,6 +1,6 @@
 #include <stdint.h>
 
-#define FRAMERATE 25
+#define FRAMERATE 35
 
 void start_io_threads();
 

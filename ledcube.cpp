@@ -10,6 +10,8 @@
 #include "io.h"
 
 
+int side_length = 5;
+
 static QVector<QVector3D> vertices;
 static QVector<QVector3D> normals;
 static QVector<GLushort> faces;
@@ -62,8 +64,8 @@ add_point(QVector3D p)
 void
 build_geometry()
 {
-  static const float D = 0.15;
-  static const float B= 150;
+  static const float D = 0.60/(side_length-1);
+  static const float B= (float)37.5*(side_length-1);
   QVector3D a0(2, -1, -1);
   QVector3D b0(0, 3, -1);
   QVector3D c0(-2, -1, -1);
@@ -73,14 +75,14 @@ build_geometry()
   c0*= 1/B;
   d0*= 1/B;
 
-  float x = -2*D;
-  for (int i = 0; i < 5; ++i, x += D)
+  float x = -((float)side_length-1)/2*D;
+  for (int i = 0; i < side_length; ++i, x += D)
   {
-    float y = -2*D;
-    for (int j = 0; j < 5; ++j, y += D)
+    float y = -((float)side_length-1)/2*D;
+    for (int j = 0; j < side_length; ++j, y += D)
     {
-      float z = -2*D;
-      for (int j = 0; j < 5; ++j, z += D)
+      float z = -((float)side_length-1)/2*D;
+      for (int j = 0; j < side_length; ++j, z += D)
       {
         QVector3D tr(x, y, z);
         QVector3D a = a0;
@@ -99,14 +101,14 @@ build_geometry()
     }
   }
 
-  QVector3D t1(-2.7*D, -2.4*D, -2.7*D);
-  QVector3D t2(-2.7*D, -2.4*D, 2.7*D);
-  QVector3D t3(2.7*D, -2.4*D, -2.7*D);
-  QVector3D t4(2.7*D, -2.4*D, 2.7*D);
-  QVector3D b1(-2.7*D, -3.3*D, -2.7*D);
-  QVector3D b2(-2.7*D, -3.3*D, 2.7*D);
-  QVector3D b3(2.7*D, -3.3*D, -2.7*D);
-  QVector3D b4(2.7*D, -3.3*D, 2.7*D);
+  QVector3D t1(-0.405, -0.36, -0.405);
+  QVector3D t2(-0.405, -0.36, 0.405);
+  QVector3D t3(0.405, -0.36, -0.405);
+  QVector3D t4(0.405, -0.36, 0.405);
+  QVector3D b1(-0.405, -0.495, -0.405);
+  QVector3D b2(-0.405, -0.495, 0.405);
+  QVector3D b3(0.405, -0.495, -0.405);
+  QVector3D b4(0.405, -0.495, 0.405);
   add_face(t1,t2,t3);
   add_face(t3,t2,t4);
   add_face(t2,t1,b1);
@@ -121,11 +123,12 @@ build_geometry()
   add_face(b3,b4,b2);
 
   /* Lines. */
-  for (int i= 0; i < 5; i++)
-    for (int j= 0; j < 5; j++)
+  float offset = ((float)side_length-1)/2;
+  for (int i= 0; i < side_length; i++)
+    for (int j= 0; j < side_length; j++)
     {
-      QVector3D tr1(D*(j-2), -3.5*D, D*(i-2));
-      QVector3D tr2(D*(j-2),  2*D, D*(i-2));
+      QVector3D tr1(D*(j-offset), -0.525, D*(i-offset));
+      QVector3D tr2(D*(j-offset),  offset*D, D*(i-offset));
       QVector3D p1(0,0,0);
       p1 += tr1;
       add_point(p1);
@@ -133,8 +136,8 @@ build_geometry()
       p2 += tr2;
       add_point(p2);
 
-      QVector3D tr3(D*(j-2), D*(i-2), -2*D);
-      QVector3D tr4(D*(j-2), D*(i-2),  2*D);
+      QVector3D tr3(D*(j-offset), D*(i-offset), -offset*D);
+      QVector3D tr4(D*(j-offset), D*(i-offset),  offset*D);
       QVector3D p3(0,0,0);
       p3 += tr3;
       add_point(p3);
@@ -142,8 +145,8 @@ build_geometry()
       p4 += tr4;
       add_point(p4);
 
-      QVector3D tr5(-2*D, D*(j-2), D*(i-2));
-      QVector3D tr6( 2*D, D*(j-2), D*(i-2));
+      QVector3D tr5(-offset*D, D*(j-offset), D*(i-offset));
+      QVector3D tr6( offset*D, D*(j-offset), D*(i-offset));
       QVector3D p5(0,0,0);
       p5 += tr5;
       add_point(p5);
@@ -179,9 +182,9 @@ draw_ledcube()
 
   const GLushort *indices = faces.constData();
   int i= 0;
-  for (int z= 0; z < 5; ++z)
-    for (int y= 0; y < 5; ++y)
-      for (int x= 0; x < 5; ++x)
+  for (int z = 0; z < side_length; ++z)
+    for (int y = 0; y < side_length; ++y)
+      for (int x = 0; x < side_length; ++x)
       {
         uint8_t col= frame[y * (11*11) + z * 11 + x];
         glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, colourVec[col]);
@@ -195,7 +198,8 @@ draw_ledcube()
   glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, indices + 12*i);
 
   glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, col_silver);
-  glDrawElements(GL_LINES, 150, GL_UNSIGNED_SHORT, indices + 12*i + 36);
+  glDrawElements(GL_LINES, side_length*side_length*2*3, GL_UNSIGNED_SHORT,
+                 indices + 12*i + 36);
 
   glDisableClientState(GL_VERTEX_ARRAY);
   glDisableClientState(GL_NORMAL_ARRAY);

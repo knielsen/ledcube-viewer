@@ -38,14 +38,18 @@
 **
 ****************************************************************************/
 
+#include <string.h>
+
 #include <QApplication>
 #include <QDesktopWidget>
 
 #include "window.h"
 #include "io.h"
-
+#include "ledcube.h"
 int main(int argc, char *argv[])
 {
+    if (argc > 1 && 0 == strcmp(argv[1], "--11"))
+        side_length = 11;
     QApplication app(argc, argv);
     Window window;
     window.resize(window.sizeHint());
