@@ -73,7 +73,7 @@ QSize GLWidget::minimumSizeHint() const
 
 QSize GLWidget::sizeHint() const
 {
-    return QSize(400, 400);
+    return QSize(750, 750);
 }
 
 static void qNormalizeAngle(int &angle)
