@@ -1,0 +1,19 @@
+Visualisation tool for led cube animations.
+
+The software for the Arduino / Ledcube is Free Software, it may be
+distributed under the GPL Licence, either version 2, or (at your
+option) a later version of the GPL. See the file COPYING for details.
+
+There is a Qt project file - run `qmake && make` to build.
+
+The program reads animations from the led cube control software,
+https://github.com/knielsen/Ledcube, and displays them using OpenGL at the
+appropriate framerate. Typical usage:
+
+    g++ -g mk_animation.cc && ./a.out --ledpro --loop  | ledcube-viewer --11
+
+The --11 option displays the 11x11x11 version. There is also the option to
+display the 5x5x5 instead.
+
+
+Contact: Kristian Nielsen <knielsen@knielsen-hq.org>
