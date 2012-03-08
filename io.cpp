@@ -154,9 +154,9 @@ io_thread_handler(void *app_data __attribute__((unused)))
     int idx= 4;
     for (int i= 0; i < SIDE; ++i)
     {
-      for (int j= 0; j < SIDE; ++j)
+      for (int k= 0; k < SIDE; ++k)
       {
-        for (int k= 0; k < SIDE; ++k)
+        for (int j= 0; j < SIDE; ++j)
         {
           if (odd_even)
           {
